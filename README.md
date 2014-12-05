@@ -5,8 +5,6 @@ Get an access token from Google using the Google Play Services and Android APIs,
 
 This is useful for accessing a user's Google or Google Play user data in Cordova apps or games.
 
-NOTICE: At present, the activity .java file must be modified with the addition of a ``onActivityResult`` function inside your ``CordovaActivity`` class. A sample is provided in ``/sample_activity_file.java``.
-
 Install & Setup
 ----------------------
 1) Add the plugin to your build.
@@ -14,29 +12,12 @@ Install & Setup
 cordova plugin add https://github.com/agamemnus/googleplaytoken
 ````
 
-2) Modify your CordovaActivity file to add a pass-through to ``GooglePlayToken.runOnActivityResult``. (e.g.: ``/platforms/android/src/com/myapp/``):
+2) Run the initialize function.
 ````
-package com.myapp;
-
-import android.os.Bundle;
-import org.apache.cordova.*;
-
-import android.content.Intent;
-
-import com.flyingsoftgames.googleplaytoken.GooglePlayToken;
-
-public class MyApp extends CordovaActivity {
- 
- @Override protected void onActivityResult (int requestCode, int resultCode, Intent data) {
-  GooglePlayToken.runOnActivityResult (requestCode, resultCode, data);
- }
- 
- @Override public void onCreate (Bundle savedInstanceState) {
-  super.onCreate (savedInstanceState);
-  super.init ();
-  super.loadUrl(Config.getStartUrl());
- }
-}
+window.plugins.GooglePlayToken.initialize ({
+ success : function (access_token) {console.log (access_token)},
+ error   : function (errormessage) {console.log (errormessage)}
+})
 ````
 
 Usage / Function List
