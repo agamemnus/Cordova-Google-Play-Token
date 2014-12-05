@@ -1,7 +1,7 @@
 googleplaytoken
 ==================
 
-Get an access token from Google Play using the Android API with Javascript.
+Get an access token from Google using the Google Play Services and Android APIs, and then use that access token in a Javascript program.
 
 NOTICE: At present, the activity .java file must be modified with the addition of a ``onActivityResult`` function inside your ``CordovaActivity`` class. A sample is provided in ``/sample_activity_file.java``.
 
