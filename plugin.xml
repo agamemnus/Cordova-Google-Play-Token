@@ -15,16 +15,9 @@
     <param name="android-package" value="com.flyingsoftgames.googleplaytoken.GooglePlayToken"/>
    </feature>
   </config-file>
-  <config-file target="res/values/strings.xml" parent="/resources">
-   <string name="app_id">$APP_ID</string>
-  </config-file>
   <dependency id="android.support.v4" />
   <dependency id="com.google.playservices" />
   <source-file src="src/android/GooglePlayToken.java" target-dir="src/com/flyingsoftgames/googleplaytoken" />
-  <config-file target="AndroidManifest.xml" parent="/manifest/application">
-   <meta-data android:name="com.google.android.gms.appstate.APP_ID" android:value="@string/app_id" />
-   <meta-data android:name="com.google.android.gms.games.APP_ID" android:value="@string/app_id" />
-  </config-file>
   <config-file target="AndroidManifest.xml" parent="/manifest">
    <uses-permission android:name="android.permission.INTERNET" />
    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
