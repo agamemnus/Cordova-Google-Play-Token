@@ -34,14 +34,14 @@ import android.util.Log;
 
 public class GooglePlayToken extends CordovaPlugin {
  
- private static final String LOG_TAG = "GooglePlayToken";
- private static final int REQ_SIGN_IN_REQUIRED = 55664;
+ private final String LOG_TAG = "GooglePlayToken";
+ private final int REQ_SIGN_IN_REQUIRED = 55664;
  
- public static CordovaInterface cordova           = null;
- public static CallbackContext tryConnectCallback = null;
- public static String          accessToken        = "";
+ public CordovaInterface cordova           = null;
+ public CallbackContext tryConnectCallback = null;
+ public String          accessToken        = "";
  
- public static final int REQUEST_CODE_PICK_ACCOUNT = 1000;
+ public final int REQUEST_CODE_PICK_ACCOUNT = 1000;
  
  @Override public void initialize (CordovaInterface initCordova, CordovaWebView webView) {
   cordova = initCordova;
@@ -51,10 +51,11 @@ public class GooglePlayToken extends CordovaPlugin {
  private void pickUserAccount () {
   String[] accountTypes = new String[]{"com.google"};
   Intent intent = AccountPicker.newChooseAccountIntent(null, null, accountTypes, false, null, null, null, null);
+  cordova.setActivityResultCallback (this);
   cordova.getActivity().startActivityForResult (intent, REQUEST_CODE_PICK_ACCOUNT);
  }
  
- public static void runOnActivityResult (int requestCode, int resultCode, Intent data) {
+ public void onActivityResult (int requestCode, int resultCode, Intent data) {
   if ((requestCode == REQUEST_CODE_PICK_ACCOUNT) && (resultCode == Activity.RESULT_OK)) {
    new RetrieveTokenTask().execute (data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
   }
@@ -76,7 +77,7 @@ public class GooglePlayToken extends CordovaPlugin {
  }
  
  
- private static class RetrieveTokenTask extends AsyncTask<String, Void, String> {
+ private class RetrieveTokenTask extends AsyncTask<String, Void, String> {
   @Override protected String doInBackground (String... params) {
    String accountName = params[0];
    String scope = "oauth2:" + Scopes.PROFILE;
