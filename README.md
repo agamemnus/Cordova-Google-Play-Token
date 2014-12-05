@@ -9,7 +9,7 @@ Install & Setup
 ----------------------
 1) Add the plugin to your build.
 ````
-cordova plugin add https://github.com/agamemnus/googleplaytoken --variable APP_ID=YOUR_APP_ID
+cordova plugin add https://github.com/agamemnus/googleplaytoken
 ````
 
 2) Modify your CordovaActivity file to add a pass-through to ``GooglePlayToken.runOnActivityResult``. (e.g.: ``/platforms/android/src/com/myapp/``):
