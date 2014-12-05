@@ -14,8 +14,6 @@
     <param name="android-package" value="com.flyingsoftgames.googleplaytoken.GooglePlayToken"/>
    </feature>
   </config-file>
-  <dependency id="android.support.v4" />
-  <dependency id="com.google.playservices" />
   <source-file src="src/android/GooglePlayToken.java" target-dir="src/com/flyingsoftgames/googleplaytoken" />
   <config-file target="AndroidManifest.xml" parent="/manifest">
    <uses-permission android:name="android.permission.INTERNET" />
