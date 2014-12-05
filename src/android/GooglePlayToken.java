@@ -36,19 +36,12 @@ public class GooglePlayToken extends CordovaPlugin {
  
  private final String LOG_TAG = "GooglePlayToken";
  private final int REQ_SIGN_IN_REQUIRED = 55664;
+ private final int REQUEST_CODE_PICK_ACCOUNT = 1000;
+ private CallbackContext tryConnectCallback = null;
+ private String scope = "oauth2:" + Scopes.PROFILE;
  
- public CordovaInterface cordova           = null;
- public CallbackContext tryConnectCallback = null;
- public String          accessToken        = "";
- 
- public final int REQUEST_CODE_PICK_ACCOUNT = 1000;
- 
- @Override public void initialize (CordovaInterface initCordova, CordovaWebView webView) {
-  cordova = initCordova;
-  super.initialize (cordova, webView);
- }
- 
- private void pickUserAccount () {
+ private void pickUserAccount (CallbackContext callbackContext) {
+  tryConnectCallback = callbackContext;
   String[] accountTypes = new String[]{"com.google"};
   Intent intent = AccountPicker.newChooseAccountIntent(null, null, accountTypes, false, null, null, null, null);
   cordova.setActivityResultCallback (this);
@@ -62,47 +55,40 @@ public class GooglePlayToken extends CordovaPlugin {
  }
  
  public boolean execute (String action, JSONArray inputs, CallbackContext callbackContext) throws JSONException {
- if ("tryConnect".equals(action)) {
-   tryConnect (callbackContext);
+  if ("setScope".equals(action)) {;
+   scope = "oauth2:" + inputs.getString(0);
   } else if ("getAccessToken".equals(action)) {
-   callbackContext.sendPluginResult (new PluginResult (PluginResult.Status.OK, accessToken));
+   pickUserAccount (callbackContext);
   }
   return true;
  }
  
- // tryConnect runs the callback with a value of false if Google Play Services isn't available.
- public void tryConnect (CallbackContext callbackContext) {
-  tryConnectCallback = callbackContext;
-  pickUserAccount ();
- }
- 
- 
  private class RetrieveTokenTask extends AsyncTask<String, Void, String> {
   @Override protected String doInBackground (String... params) {
    String accountName = params[0];
-   String scope = "oauth2:" + Scopes.PROFILE;
    Context context = cordova.getActivity().getApplicationContext();
+   String accessToken = null;
    try {
     accessToken = GoogleAuthUtil.getToken(context, accountName, scope);
    } catch (IOException e) {
     String errormessage = e.getMessage();
-    if (tryConnectCallback != null) tryConnectCallback.error ("Error: " + errormessage + "."); tryConnectCallback = null;
+    if (tryConnectCallback != null) {tryConnectCallback.error ("Error: " + errormessage + "."); tryConnectCallback = null;}
    } catch (UserRecoverableAuthException e) {
     cordova.getActivity().startActivityForResult (e.getIntent(), REQ_SIGN_IN_REQUIRED);
    } catch (GoogleAuthException e) {
     String errormessage = e.getMessage();
-    if (tryConnectCallback != null) tryConnectCallback.error ("Error: " + errormessage + "."); tryConnectCallback = null;
+    if (tryConnectCallback != null) {tryConnectCallback.error ("Error: " + errormessage + "."); tryConnectCallback = null;}
    }
    return accessToken;
   }
   
-  @Override protected void onPostExecute (String newAccessToken) {
-   super.onPostExecute (newAccessToken);
-   accessToken = newAccessToken;
-   if (tryConnectCallback != null) {
-    tryConnectCallback.sendPluginResult (new PluginResult (PluginResult.Status.OK, accessToken));
-    tryConnectCallback = null;
-   }
+  @Override protected void onPostExecute (String accessToken) {
+   // accessToken can be null if doInBackground catches an error.
+   if (accessToken == null) return;
+   super.onPostExecute (accessToken);
+   if (tryConnectCallback == null) return;
+   tryConnectCallback.sendPluginResult (new PluginResult (PluginResult.Status.OK, accessToken));
+   tryConnectCallback = null;
   }
  }
 }
