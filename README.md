@@ -12,30 +12,23 @@ Install & Setup
 cordova plugin add https://github.com/agamemnus/googleplaytoken
 ````
 
-2) Run the initialize function.
-````
-window.plugins.GooglePlayToken.initialize ({
- success : function (access_token) {console.log (access_token)},
- error   : function (errormessage) {console.log (errormessage)}
-})
+2) Run the getAccessToken function.
 ````
 
 Usage / Function List
 ----------------------
 
-initialize: Initialize, potentially ask the user to authorize and log in, and get and store an access token.
+getAccessToken (alias: initialize): Initialize, potentially ask the user to authorize and log in, and get an access token.
+Note that the access token does expire every 60 minutes. A new token will be generated if getAccessToken is called more than once.
 ````
-window.plugins.GooglePlayToken.initialize ({
- success : function (result) {},
- error   : function (result) {}
+window.plugins.GooglePlayToken.getAccessToken ({
+ success : function (access_token) {console.log (access_token)},
+ error   : function (errormessage) {console.log (errormessage)}
 })
 ````
 <br/>
-getAccessToken: Retrieve the stored access token generated in the initialization.
+setScope: Set the scope for the access token. The default scope is ``Scopes.PROFILE`` which is a constant value in ``com.google.android.gms.common.Scopes`` for "profile".
 ````
-window.plugins.GooglePlayToken.getAccessToken ({
- success : function (result) {},
- error   : function (result) {}
-})
+window.plugins.GooglePlayToken.setScope (scope_string)
 ````
 
