@@ -38,6 +38,7 @@ public class GooglePlayToken extends CordovaPlugin {
  private final int REQ_SIGN_IN_REQUIRED = 55664;
  private final int REQUEST_CODE_PICK_ACCOUNT = 1000;
  private CallbackContext tryConnectCallback = null;
+ private String lastAccessToken = null;
  private String scope = "oauth2:" + Scopes.PROFILE;
  
  private void pickUserAccount (CallbackContext callbackContext) {
@@ -69,6 +70,7 @@ public class GooglePlayToken extends CordovaPlugin {
    Context context = cordova.getActivity().getApplicationContext();
    String accessToken = null;
    try {
+    if (lastAccessToken != null) GoogleAuthUtil.clearToken (context, lastAccessToken);
     accessToken = GoogleAuthUtil.getToken(context, accountName, scope);
    } catch (IOException e) {
     String errormessage = e.getMessage();
@@ -83,8 +85,8 @@ public class GooglePlayToken extends CordovaPlugin {
   }
   
   @Override protected void onPostExecute (String accessToken) {
-   // accessToken can be null if doInBackground catches an error.
    if (accessToken == null) return;
+   lastAccessToken = accessToken;
    super.onPostExecute (accessToken);
    if (tryConnectCallback == null) return;
    tryConnectCallback.sendPluginResult (new PluginResult (PluginResult.Status.OK, accessToken));
