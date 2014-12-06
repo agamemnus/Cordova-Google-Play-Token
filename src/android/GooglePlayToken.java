@@ -70,7 +70,7 @@ public class GooglePlayToken extends CordovaPlugin {
    Context context = cordova.getActivity().getApplicationContext();
    String accessToken = null;
    try {
-    if (lastAccessToken != null) GoogleAuthUtil.clearToken (context, lastAccessToken);
+    if (lastAccessToken != null) {GoogleAuthUtil.clearToken (context, lastAccessToken); lastAccessToken = null}
     accessToken = GoogleAuthUtil.getToken(context, accountName, scope);
    } catch (IOException e) {
     String errormessage = e.getMessage();
