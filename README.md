@@ -13,7 +13,6 @@ cordova plugin add https://github.com/agamemnus/googleplaytoken
 ````
 
 2) Run the getAccessToken function.
-````
 
 Usage / Function List
 ----------------------
