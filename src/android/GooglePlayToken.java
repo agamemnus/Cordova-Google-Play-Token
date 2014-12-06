@@ -42,6 +42,7 @@ public class GooglePlayToken extends CordovaPlugin {
  private String scope = "oauth2:" + Scopes.PROFILE;
  
  private void pickUserAccount (CallbackContext callbackContext) {
+  Log.d (LOG_TAG, "pickUserAccount");
   tryConnectCallback = callbackContext;
   String[] accountTypes = new String[]{"com.google"};
   Intent intent = AccountPicker.newChooseAccountIntent(null, null, accountTypes, false, null, null, null, null);
@@ -50,12 +51,14 @@ public class GooglePlayToken extends CordovaPlugin {
  }
  
  public void onActivityResult (int requestCode, int resultCode, Intent data) {
+    Log.d (LOG_TAG, "onActivityResult");
   if ((requestCode == REQUEST_CODE_PICK_ACCOUNT) && (resultCode == Activity.RESULT_OK)) {
    new RetrieveTokenTask().execute (data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
   }
  }
  
  public boolean execute (String action, JSONArray inputs, CallbackContext callbackContext) throws JSONException {
+  Log.d (LOG_TAG, "execute");
   if ("setScope".equals(action)) {;
    scope = "oauth2:" + inputs.getString(0);
   } else if ("getAccessToken".equals(action)) {
@@ -66,6 +69,7 @@ public class GooglePlayToken extends CordovaPlugin {
  
  private class RetrieveTokenTask extends AsyncTask<String, Void, String> {
   @Override protected String doInBackground (String... params) {
+   Log.d (LOG_TAG, "doInBackground");
    String accountName = params[0];
    Context context = cordova.getActivity().getApplicationContext();
    String accessToken = null;
@@ -81,16 +85,11 @@ public class GooglePlayToken extends CordovaPlugin {
     String errormessage = e.getMessage();
     if (tryConnectCallback != null) {tryConnectCallback.error ("Error: " + errormessage + "."); tryConnectCallback = null;}
    }
-   return accessToken;
-  }
-  
-  @Override protected void onPostExecute (String accessToken) {
-   if (accessToken == null) return;
    lastAccessToken = accessToken;
-   super.onPostExecute (accessToken);
-   if (tryConnectCallback == null) return;
+   if (tryConnectCallback == null) return "";
    tryConnectCallback.sendPluginResult (new PluginResult (PluginResult.Status.OK, accessToken));
    tryConnectCallback = null;
+   return "";
   }
  }
 }
