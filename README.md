@@ -1,7 +1,7 @@
 googleplaytoken
 ==================
 
-Get an access token from Google using the Google Play Services and Android APIs, and then use that access token in a Javascript program.
+Get an access token from Google using the Google Play Services API and Android API, and then use that access token in a Javascript program.
 
 This is useful for accessing a user's Google or Google Play user data in Cordova apps or games.
 
