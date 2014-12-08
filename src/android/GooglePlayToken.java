@@ -35,30 +35,31 @@ import android.util.Log;
 public class GooglePlayToken extends CordovaPlugin {
  
  private final String LOG_TAG = "GooglePlayToken";
- private final int REQ_SIGN_IN_REQUIRED = 55664;
- private final int REQUEST_CODE_PICK_ACCOUNT = 1000;
+ private final int REQUEST_CODE_PICK_ACCOUNT     = 1000;
+ private final int REQUEST_CODE_SIGN_IN_REQUIRED = 55664;
  private CallbackContext tryConnectCallback = null;
  private String lastAccessToken = null;
  private String scope = "oauth2:" + Scopes.PROFILE;
  
+ private void doSetResultCallBack () {
+  cordova.setActivityResultCallback (this);
+ }
+ 
  private void pickUserAccount (CallbackContext callbackContext) {
-  Log.d (LOG_TAG, "pickUserAccount");
   tryConnectCallback = callbackContext;
   String[] accountTypes = new String[]{"com.google"};
-  Intent intent = AccountPicker.newChooseAccountIntent(null, null, accountTypes, false, null, null, null, null);
-  cordova.setActivityResultCallback (this);
+  Intent intent = AccountPicker.newChooseAccountIntent (null, null, accountTypes, false, null, null, null, null);
+  doSetResultCallBack ();
   cordova.getActivity().startActivityForResult (intent, REQUEST_CODE_PICK_ACCOUNT);
  }
  
  public void onActivityResult (int requestCode, int resultCode, Intent data) {
-    Log.d (LOG_TAG, "onActivityResult");
-  if ((requestCode == REQUEST_CODE_PICK_ACCOUNT) && (resultCode == Activity.RESULT_OK)) {
+  if (((requestCode == REQUEST_CODE_SIGN_IN_REQUIRED) || (requestCode == REQUEST_CODE_PICK_ACCOUNT)) && (resultCode == Activity.RESULT_OK)) {
    new RetrieveTokenTask().execute (data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
   }
  }
  
  public boolean execute (String action, JSONArray inputs, CallbackContext callbackContext) throws JSONException {
-  Log.d (LOG_TAG, "execute");
   if ("setScope".equals(action)) {;
    scope = "oauth2:" + inputs.getString(0);
   } else if ("getAccessToken".equals(action)) {
@@ -69,7 +70,6 @@ public class GooglePlayToken extends CordovaPlugin {
  
  private class RetrieveTokenTask extends AsyncTask<String, Void, String> {
   @Override protected String doInBackground (String... params) {
-   Log.d (LOG_TAG, "doInBackground");
    String accountName = params[0];
    Context context = cordova.getActivity().getApplicationContext();
    String accessToken = null;
@@ -79,11 +79,15 @@ public class GooglePlayToken extends CordovaPlugin {
    } catch (IOException e) {
     String errormessage = e.getMessage();
     if (tryConnectCallback != null) {tryConnectCallback.error ("Error: " + errormessage + "."); tryConnectCallback = null;}
+    return "";
    } catch (UserRecoverableAuthException e) {
-    cordova.getActivity().startActivityForResult (e.getIntent(), REQ_SIGN_IN_REQUIRED);
+    doSetResultCallBack ();
+    cordova.getActivity().startActivityForResult (e.getIntent(), REQUEST_CODE_SIGN_IN_REQUIRED);
+    return "";
    } catch (GoogleAuthException e) {
     String errormessage = e.getMessage();
     if (tryConnectCallback != null) {tryConnectCallback.error ("Error: " + errormessage + "."); tryConnectCallback = null;}
+    return "";
    }
    lastAccessToken = accessToken;
    if (tryConnectCallback == null) return "";
