@@ -57,9 +57,11 @@ public class GooglePlayToken extends CordovaPlugin {
   if (((requestCode == REQUEST_CODE_SIGN_IN_REQUIRED) || (requestCode == REQUEST_CODE_PICK_ACCOUNT)) && (resultCode == Activity.RESULT_OK)) {
    new RetrieveTokenTask().execute (data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
   }
-  // Otherwise, send an error.
-  String errormessage = ((requestCode == REQUEST_CODE_SIGN_IN_REQUIRED) ? "user refused to give permissions." : "unknown");
-  if (tryConnectCallback != null) {tryConnectCallback.error ("Error: " + errormessage + "."); tryConnectCallback = null;}
+  
+  if (resultCode == Activity.RESULT_CANCELED) {
+   String errormessage = ((requestCode == REQUEST_CODE_SIGN_IN_REQUIRED) ? "user refused to give permissions." : "unknown");
+   if (tryConnectCallback != null) {tryConnectCallback.error ("Error: " + errormessage + "."); tryConnectCallback = null;}
+  }
  }
  
  public boolean execute (String action, JSONArray inputs, CallbackContext callbackContext) throws JSONException {
