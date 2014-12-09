@@ -1,4 +1,4 @@
-googleplaytoken
+cordova-google-play-token
 ==================
 
 Get an access token from Google using the Google Play Services API and Android API, and then use that access token in a Javascript program.
