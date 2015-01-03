@@ -7,7 +7,7 @@
  <keywords>cordova,phonegap,google play services,token,access token,google,play,google play,google play api,google play services api,play services,play services api,android,agamemnus,flyingsoftgames</keywords>
  <engines><engine name="cordova" version=">=3.0.0" /></engines>
  
- <js-module src="www/googleplaytoken.js" name="GooglePlayToken"><clobbers target="window.plugins.GooglePlayToken" /></js-module>
+ <js-module src="www/googleplaytoken.js" name="GooglePlayToken"><clobbers target="window.plugins.GooglePlayToken"/></js-module>
  <platform name="android">
   <config-file target="res/xml/config.xml" parent="/*">
    <feature name="GooglePlayToken">
