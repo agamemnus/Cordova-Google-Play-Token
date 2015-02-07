@@ -1,5 +1,5 @@
 cordova-google-play-token
-==================
+==========================
 
 Get an access token from Google using the Google Play Services API and Android API, and then use that access token in a Javascript program.
 
@@ -7,15 +7,16 @@ This is useful for accessing a user's Google or Google Play user data in Cordova
 
 
 Donations
---------
+----------
 Please help feed Tiny Tim!
+
 Gratipay / Gittip: https://gratipay.com/agamemnus/
 
 Paypal: agamemnus at flyingsoftgames dot com
 
 
 Install & Setup
-----------------------
+----------------
 1) Add the plugin to your build.
 ````
 cordova plugin add https://github.com/agamemnus/googleplaytoken
@@ -40,4 +41,3 @@ setScope: Set the scope for the access token. The default scope is ``Scopes.PROF
 ````
 window.plugins.GooglePlayToken.setScope (scope_string)
 ````
-
