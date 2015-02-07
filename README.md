@@ -5,6 +5,15 @@ Get an access token from Google using the Google Play Services API and Android A
 
 This is useful for accessing a user's Google or Google Play user data in Cordova apps or games.
 
+
+Donations
+--------
+Please help feed Tiny Tim!
+Gratipay / Gittip: https://gratipay.com/agamemnus/
+
+Paypal: agamemnus at flyingsoftgames dot com
+
+
 Install & Setup
 ----------------------
 1) Add the plugin to your build.
@@ -13,6 +22,7 @@ cordova plugin add https://github.com/agamemnus/googleplaytoken
 ````
 
 2) Run the getAccessToken function.
+
 
 Usage / Function List
 ----------------------
